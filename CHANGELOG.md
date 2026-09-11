@@ -9,7 +9,7 @@ All notable changes to VisionOps are documented here. The project follows
 
 - Canonical `visionops` package for training, evaluation, explainability, and
   runtime diagnostics.
-- MIT license, contribution and security policies, and GitHub CI/release
+- Apache-2.0 license, contribution and security policies, and GitHub CI/release
   automation.
 - Regression tests for the public namespace and filesystem utilities.
 

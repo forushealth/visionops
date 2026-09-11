@@ -156,4 +156,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the contribution workflow.
 
 ## License
 
-VisionOps is available under the [MIT License](LICENSE).
+VisionOps is available under the [Apache License 2.0](LICENSE).
