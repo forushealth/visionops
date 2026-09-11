@@ -3,7 +3,7 @@
 <h1>VisionOps</h1>
 <h3>MLOps-First Computer Vision</h3>
 
-<p>Train · Evaluate · Explain · Track</p>
+<p><strong>Train · Evaluate · Explain · Track</strong></p>
 
 <p>
   <a href="#install-from-source">Installation</a> ·
@@ -16,29 +16,44 @@
 
 ---
 
-VisionOps is an open-source Python toolkit that makes structured training,
-task-aware evaluation, standardized artifacts, explainability, and experiment
-tracking part of the workflow—not afterthoughts. It supports binary, multiclass,
-and multilabel classification with optional Keras and PyTorch Lightning
-integrations, alongside runtime diagnostics.
+VisionOps is an open-source, MLOps-first toolkit for computer vision that makes
+structured training, task-aware evaluation, standardized artifacts,
+explainability, and experiment tracking part of the workflow—not afterthoughts.
+Built in Python, it brings together tools for computer-vision tasks with
+Keras and PyTorch Lightning integrations, alongside runtime diagnostics.
+
+## Train · Evaluate · Explain · Track
+
+VisionOps connects four parts of the model-development workflow through
+task-aware interfaces and reusable artifacts:
+
+| Capability | What it brings to your workflow |
+| --- | --- |
+| **Train** | Structured training workflows with Keras and PyTorch Lightning adapters. |
+| **Evaluate** | Task-aware metrics and model-free evaluation from saved predictions, with standardized CSV/NPZ artifacts, plots, and reports. |
+| **Explain** | CAM-based utilities for inspecting which image regions influence model predictions. |
+| **Track** | MLflow integration brings experiment parameters, metrics, and artifacts together, complemented by runtime and GPU diagnostics. |
+
+The MLOps-first approach makes evaluation outputs, explainability, and experiment
+records part of model development from the start, rather than separate scripts
+added after training.
 
 ## Features
 
 - One task contract for binary (`bc`), multiclass (`mcc`), multilabel (`mlc`),
   and segmentation (`seg`) metrics.
 - Separate training and model-free evaluation pipelines.
-- CSV and NPZ evaluation artifacts with JSON, Markdown, plots, and optional PDF
+- CSV and NPZ evaluation artifacts with JSON, Markdown, plots, and PDF
   reports.
-- Keras and PyTorch Lightning training adapters installed through optional
-  dependencies.
+- Keras and PyTorch Lightning training adapters.
 - CAM generation helpers for post-training explainability.
 - GPU sampling and runtime diagnostic reports.
-- Optional MLflow logging without coupling it to the core installation.
+- MLflow integration for experiment parameters, metrics, and artifacts.
 
 ## Requirements
 
 - Python 3.10, 3.11, or 3.12
-- A supported backend extra for training (`keras` or `torch`)
+- Keras or PyTorch Lightning for model training
 - NVIDIA tooling only when GPU diagnostics are required
 
 ## Install from source
@@ -46,8 +61,8 @@ integrations, alongside runtime diagnostics.
 Clone the repository and install the core package:
 
 ```bash
-git clone https://github.com/forushealth/forushealth.git
-cd forushealth
+git clone https://github.com/forushealth/visionops.git
+cd visionops
 python -m pip install .
 ```
 

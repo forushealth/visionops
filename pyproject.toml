@@ -44,8 +44,8 @@ dependencies = [
 ]
 
 [project.urls]
-Repository = "https://github.com/forushealth/forushealth"
-Issues = "https://github.com/forushealth/forushealth/issues"
+Repository = "https://github.com/forushealth/visionops"
+Issues = "https://github.com/forushealth/visionops/issues"
 
 [project.optional-dependencies]
 image = [
