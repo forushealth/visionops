@@ -1,33 +1,159 @@
-# Forus Health
+# VisionOps
 
-**Transforming eye care through technology, medical devices, and artificial intelligence.**
+VisionOps is an open-source Python toolkit for computer-vision training,
+evaluation, explainability, and runtime diagnostics. It provides task-aware
+workflows for binary, multiclass, and multilabel classification across Keras
+and PyTorch Lightning.
 
-Forus Health is a healthcare technology and medical-device company focused on making high-quality eye care more accessible. We design and build ophthalmic imaging and diagnostic solutions that help healthcare professionals screen, detect, and manage ocular conditions across diverse clinical environments.
+> **Project status:** alpha. The evaluation and artifact workflows are the most
+> mature parts of the package. Segmentation is currently supported by the metric
+> contract only; the bundled trainers remain classification-focused.
 
-Our technology spans **retinal imaging, ophthalmic diagnostics, digital-health platforms, and AI-assisted clinical solutions**.
+## Features
 
-## AI & Engineering at Forus Health
+- One task contract for binary (`bc`), multiclass (`mcc`), multilabel (`mlc`),
+  and segmentation (`seg`) metrics.
+- Separate training and model-free evaluation pipelines.
+- CSV and NPZ evaluation artifacts with JSON, Markdown, plots, and optional PDF
+  reports.
+- Keras and PyTorch Lightning training adapters installed through optional
+  dependencies.
+- CAM generation helpers for post-training explainability.
+- GPU sampling and runtime diagnostic reports.
+- Optional MLflow logging without coupling it to the core installation.
 
-The AI team at Forus Health builds intelligent systems combining **computer vision, multimodal AI, medical imaging, and production AI infrastructure** to support the next generation of ophthalmic care.
+## Requirements
 
-Our work includes:
+- Python 3.10, 3.11, or 3.12
+- A supported backend extra for training (`keras` or `torch`)
+- NVIDIA tooling only when GPU diagnostics are required
 
-* **Medical Computer Vision** — classification, detection, segmentation, image-quality assessment, and retinal-image analysis.
-* **Vision-Language & Multimodal AI** — developing models that jointly understand medical images and clinical information.
-* **Clinical AI Systems** — building AI solutions for retinal diseases, biomarkers, screening, and decision-support workflows.
-* **AI Infrastructure & MLOps** — model training, evaluation, versioning, deployment, monitoring, and scalable inference.
-* **AI Platforms & Developer Tools** — creating reusable infrastructure that helps research models move reliably into production.
-* **Research & Innovation** — exploring medical imaging, multimodal learning, explainability, efficient inference, and intelligent healthcare systems.
+## Install from source
 
-## Open Source
+Clone the repository and install the core package:
 
-Through this GitHub organization, we share selected **tools, frameworks, libraries, research implementations, and engineering projects** developed by teams at Forus Health.
+```bash
+git clone https://github.com/forushealth/forushealth.git
+cd forushealth
+python -m pip install .
+```
 
-Our goal is to contribute useful technology to the broader AI, healthcare, and open-source communities while continuing to build systems that make advanced eye care more accessible.
+Install only the capabilities you need:
 
----
+```bash
+python -m pip install ".[image]"
+python -m pip install ".[keras,image]"
+python -m pip install ".[torch,image]"
+python -m pip install ".[tracking]"
+python -m pip install ".[all]"
+```
 
-**Forus Health** — *Technology for accessible eye care.*
+For development:
 
-🌐 **Forus Health:** [forushealth.com](https://forushealth.com/)
-🤖 **Forus Health AI:** [forushealth.ai](https://forushealth.ai/)
+```bash
+python -m pip install -e ".[dev]"
+pytest -q
+```
+
+The installable distribution is named `visionops-toolkit`; the Python import is
+`visionops`. This avoids a collision with an unrelated distribution that
+already uses the shorter name. Release automation is configured to publish
+artifacts to GitHub Releases rather than upload them to a package index.
+
+## Quick start: metrics
+
+```python
+import numpy as np
+
+from visionops import TaskSpec, compute_metrics
+
+y_true = np.array([0, 1, 2, 1])
+y_logits = np.array(
+    [
+        [3.0, 0.2, 0.1],
+        [0.1, 2.8, 0.3],
+        [0.0, 0.2, 2.4],
+        [0.2, 2.1, 0.4],
+    ]
+)
+
+metrics = compute_metrics(
+    y_true,
+    y_logits,
+    TaskSpec(task_type="mcc", num_classes=3),
+)
+print(metrics)
+```
+
+## Training
+
+Use `TrainingPipeline` when you need training plus artifact export:
+
+```python
+from visionops import TaskSpec, TrainingPipeline
+
+pipeline = TrainingPipeline(
+    backend="torch",
+    task_spec=TaskSpec(task_type="mcc", num_classes=3),
+    config_path="config.yaml",
+    use_mlflow=False,
+)
+
+pipeline.fit(model=model, datamodule=datamodule, max_epochs=10)
+```
+
+For Keras, provide a YAML configuration and install the `keras` extra. For
+PyTorch Lightning, pass a model and datamodule/dataloaders or provide the
+dataset settings used by the bundled task-aware data module.
+
+Only load model, checkpoint, and configuration artifacts from sources you
+trust. Keras and PyTorch loaders may reconstruct executable Python objects, and
+configuration files can select code and filesystem paths used by a run.
+
+## Model-free evaluation
+
+An evaluation pipeline can read arrays or a saved NPZ artifact without a model
+object:
+
+```python
+from visionops import EvaluationPipeline, TaskSpec
+
+evaluator = EvaluationPipeline(
+    task_spec=TaskSpec(task_type="mcc", num_classes=3)
+)
+
+metrics = evaluator.evaluate_npz("artifacts/eval_outputs.npz")
+```
+
+The NPZ file must contain `y_true` and `y_pred` arrays.
+
+## Main public APIs
+
+| Area | APIs |
+|---|---|
+| Task definition | `TaskSpec`, `TaskType` |
+| Metrics | `compute_metrics`, `evaluate_task` |
+| Orchestration | `TrainingPipeline`, `EvaluationPipeline`, `Pipeline` |
+| Reports | `Evaluator`, `run_experiment_description` |
+| Explainability | `generate_cam`, `compare_cams` |
+| Diagnostics | `run_dfperf_preflight`, `GPUSampler` |
+| Configuration | `ExperimentConfig`, `load_config_yaml`, `save_config_yaml` |
+
+Backend-specific and lower-level utilities remain available as submodules, for
+example `visionops.DataUtils` and `visionops.TorchCAMUtils`.
+
+## Development checks
+
+```bash
+python -m compileall -q visionops tests
+ruff check visionops tests
+pytest -q
+python -m build
+python -m twine check dist/*
+```
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the contribution workflow.
+
+## License
+
+VisionOps is available under the [MIT License](LICENSE).
