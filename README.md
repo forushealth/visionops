@@ -1,9 +1,26 @@
-# VisionOps
+<div align="center">
 
-VisionOps is an open-source Python toolkit for computer-vision training,
-evaluation, explainability, and runtime diagnostics. It provides task-aware
-workflows for binary, multiclass, and multilabel classification across Keras
-and PyTorch Lightning.
+<h1>VisionOps</h1>
+<h3>MLOps-First Computer Vision</h3>
+
+<p>Train · Evaluate · Explain · Track</p>
+
+<p>
+  <a href="#install-from-source">Installation</a> ·
+  <a href="#features">Features</a> ·
+  <a href="CONTRIBUTING.md">Contributing</a> ·
+  <a href="LICENSE">Apache-2.0</a>
+</p>
+
+</div>
+
+---
+
+VisionOps is an open-source Python toolkit that makes structured training,
+task-aware evaluation, standardized artifacts, explainability, and experiment
+tracking part of the workflow—not afterthoughts. It supports binary, multiclass,
+and multilabel classification with optional Keras and PyTorch Lightning
+integrations, alongside runtime diagnostics.
 
 > **Project status:** alpha. The evaluation and artifact workflows are the most
 > mature parts of the package. Segmentation is currently supported by the metric
