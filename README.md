@@ -22,10 +22,6 @@ tracking part of the workflow—not afterthoughts. It supports binary, multiclas
 and multilabel classification with optional Keras and PyTorch Lightning
 integrations, alongside runtime diagnostics.
 
-> **Project status:** alpha. The evaluation and artifact workflows are the most
-> mature parts of the package. Segmentation is currently supported by the metric
-> contract only; the bundled trainers remain classification-focused.
-
 ## Features
 
 - One task contract for binary (`bc`), multiclass (`mcc`), multilabel (`mlc`),
